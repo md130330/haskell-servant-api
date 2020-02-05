@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric              #-}
 {-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GADTs                      #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
@@ -10,81 +11,99 @@
 
 module Schema where
 
-import           Data.Aeson          (FromJSON, Object, ToJSON, object,
-                                      parseJSON, toJSON, withObject, (.:), (.=))
-import           Data.Aeson.Types    (Parser)
-import           Data.Text           (Text)
-import           Database.Persist    (Entity (..))
-import qualified Database.Persist.TH as PTH
+import           Data.Aeson           (ToJSON, object, toJSON, (.=))
+import           Data.Text            (Text)
+import           Database.Persist     (Entity (..))
+import qualified Database.Persist.TH  as PTH
 
-PTH.share [PTH.mkPersist PTH.sqlSettings, PTH.mkMigrate "migrateAll"] [PTH.persistLowerCase|
-  Player sql=gonzaga
+PTH.share [PTH.mkPersist PTH.sqlSettings, PTH.mkMigrate "migrateAll"] [PTH.persistUpperCase|
+  Player sql=player_stats
     name Text
-    number Int Maybe
-    class Text
-    position Text
-    height Text
-    weight Int Maybe
-    hometown Text Maybe
-    highschool Text Maybe
-    rsci Text Maybe Maybe
-    summary Text
-    Primary name
+    gamesPlayed Int Maybe
+    gamesStarted Int Maybe
+    minutesPerGame Double Maybe
+    fieldGoalsMadePerGame Double Maybe
+    fieldGoalsAttemptedPerGame Double Maybe
+    fieldGoalPercentage Double Maybe
+    twoPointsMadePerGame Double Maybe
+    twoPointsAttemptedPerGame Double Maybe
+    twoPointPercentage Double Maybe
+    threePointsMadePerGame Double Maybe
+    threePointsAttemptedPerGame Double Maybe
+    threePointPercentage Double Maybe
+    freeThrowsMadePerGame Double Maybe
+    freeThrowsAttemptedPerGame Double Maybe
+    freeThrowPercentage Double Maybe
+    oRebPerGame Double Maybe
+    dRebPerGame Double Maybe
+    totalRebPerGame Double Maybe
+    assistsPerGame Double Maybe
+    stealsPerGame Double Maybe
+    blocksPerGame Double Maybe
+    turnoversPerGame Double Maybe
+    foulsPerGame Double Maybe
+    pointsPerGame Double Maybe
+    year Int
+    school Text
+    UniquePlayer name year school
+    Primary name year school
     deriving Show Read
 |]
 
 instance ToJSON Player where
   toJSON player = object
-    [ "name" .= playerName player
-    , "number" .= playerNumber player
-    , "class" .= playerClass player
-    , "position" .= playerPosition player
-    , "height" .= playerHeight player
-    , "weight" .= playerWeight player
-    , "hometown" .= playerHometown player
-    , "highschool" .= playerHighschool player
-    , "rsci" .= playerRsci player
-    , "summary" .= playerSummary player
+    [ "name" .=  playerName player
+    , "gamesPlayed" .= playerGamesPlayed player
+    , "gamesStarted" .= playerGamesStarted player
+    , "minutesPerGame" .= playerMinutesPerGame player
+    , "fieldGoalsMadePerGame" .= playerFieldGoalsMadePerGame player
+    , "fieldGoalsAttemptedPerGame" .= playerFieldGoalsAttemptedPerGame player
+    , "fieldGoalPercentage" .= playerFieldGoalPercentage player
+    , "twoPointsMadePerGame" .= playerTwoPointsMadePerGame player
+    , "twoPointstAttemptedPerGame" .= playerTwoPointsAttemptedPerGame player
+    , "twoPointPercentage" .= playerTwoPointPercentage player
+    , "threePointsMadePerGame" .= playerThreePointsMadePerGame player
+    , "threePointsAttemptedPerGame" .= playerThreePointsAttemptedPerGame player
+    , "threePointPercentage" .= playerThreePointPercentage player
+    , "freeThrowsMadePerGame" .= playerFreeThrowsMadePerGame player
+    , "freeThrowsAttemptedPerGame" .= playerFreeThrowsAttemptedPerGame player
+    , "freeThrowPercentage" .= playerFreeThrowPercentage player
+    , "oRebPerGame" .= playerORebPerGame player
+    , "dRebPerGame" .= playerDRebPerGame player
+    , "totalRebPerGame" .= playerTotalRebPerGame player
+    , "assistsPerGame".= playerAssistsPerGame player
+    , "stealsPerGame" .= playerStealsPerGame player
+    , "blocksPerGame" .= playerBlocksPerGame player
+    , "turnoversPerGame" .= playerTurnoversPerGame player
+    , "foulsPerGame" .= playerFoulsPerGame player
+    , "pointsPerGame" .= playerPointsPerGame player
     ]
 
 instance ToJSON (Entity Player) where
-  toJSON (Entity playerid player) = object
-    [ "name" .= playerName player
-    , "number" .= playerNumber player
-    , "class" .= playerClass player
-    , "position" .= playerPosition player
-    , "height" .= playerHeight player
-    , "weight" .= playerWeight player
-    , "hometown" .= playerHometown player
-    , "highschool" .= playerHighschool player
-    , "rsci" .= playerRsci player
-    , "summary" .= playerSummary player
+  toJSON (Entity _ player) = object
+    [ "name" .=  playerName player
+    , "gamesPlayed" .= playerGamesPlayed player
+    , "gamesStarted" .= playerGamesStarted player
+    , "minutesPerGame" .= playerMinutesPerGame player
+    , "fieldGoalsMadePerGame" .= playerFieldGoalsMadePerGame player
+    , "fieldGoalsAttemptedPerGame" .= playerFieldGoalsAttemptedPerGame player
+    , "fieldGoalPercentage" .= playerFieldGoalPercentage player
+    , "twoPointsMadePerGame" .= playerTwoPointsMadePerGame player
+    , "twoPointstAttemptedPerGame" .= playerTwoPointsAttemptedPerGame player
+    , "twoPointPercentage" .= playerTwoPointPercentage player
+    , "threePointsMadePerGame" .= playerThreePointsMadePerGame player
+    , "threePointsAttemptedPerGame" .= playerThreePointsAttemptedPerGame player
+    , "threePointPercentage" .= playerThreePointPercentage player
+    , "freeThrowsMadePerGame" .= playerFreeThrowsMadePerGame player
+    , "freeThrowsAttemptedPerGame" .= playerFreeThrowsAttemptedPerGame player
+    , "freeThrowPercentage" .= playerFreeThrowPercentage player
+    , "oRebPerGame" .= playerORebPerGame player
+    , "dRebPerGame" .= playerDRebPerGame player
+    , "totalRebPerGame" .= playerTotalRebPerGame player
+    , "assistsPerGame".= playerAssistsPerGame player
+    , "stealsPerGame" .= playerStealsPerGame player
+    , "blocksPerGame" .= playerBlocksPerGame player
+    , "turnoversPerGame" .= playerTurnoversPerGame player
+    , "foulsPerGame" .= playerFoulsPerGame player
+    , "pointsPerGame" .= playerPointsPerGame player
     ]
-
-instance FromJSON Player where
-  parseJSON = withObject "Player" parseUser
-
-parseUser :: Object -> Parser Player
-parseUser o = do
-  pName <- o .: "name"
-  pNumber <- o .: "number"
-  pClass <- o .: "class"
-  pPosition <- o .: "position"
-  pHeight <- o .: "height"
-  pWeight <- o .: "weight"
-  pHometown <- o .: "hometown"
-  pHighschool <- o .: "highschool"
-  pRsci <- o .: "rsci"
-  pSummary <- o .: "summary"
-  return Player
-    { playerName = pName
-    , playerNumber = pNumber
-    , playerClass = pClass
-    , playerPosition = pPosition
-    , playerHeight = pHeight
-    , playerWeight = pWeight
-    , playerHometown = pHometown
-    , playerHighschool = pHighschool
-    , playerRsci = pRsci
-    , playerSummary = pSummary
-    }

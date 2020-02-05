@@ -2,31 +2,44 @@
 
 module Database where
 
-import           Control.Monad.Logger (runStdoutLoggingT, LoggingT)
-import           Control.Monad.Reader (runReaderT)
-import           Database.Persist (selectFirst, selectList, (==.), Entity)
-import           Database.Persist.Postgresql (ConnectionString, withPostgresqlConn, runMigration, SqlPersistT)
-import           Data.Text (Text)
+import           Control.Monad.IO.Class       (liftIO)
+import           Control.Monad.Logger         (NoLoggingT, runStdoutLoggingT)
+import           Control.Monad.Trans.Reader   (ReaderT)
+import           Control.Monad.Trans.Resource (ResourceT)
+import           Data.Text                    (Text, append, pack)
+import           Data.Text.Encoding           (encodeUtf8)
+import           Database.Persist             (Entity, selectList, (==.))
+import           Database.Persist.Postgresql  (ConnectionString, SqlBackend,
+                                               runSqlPersistMPool,
+                                               withPostgresqlPool)
 
 import           Schema
+import           SecretsManager
 
-localConnString :: ConnectionString
-localConnString = "host=college-basketball-api.c5w88jwm35y8.us-east-2.rds.amazonaws.com port=5432 user=administrator dbname=postgres password=wHinIfJnmCjSAhSYFb8S"
 
--- This is IO since in a real application we'd want to configure it.
+zipText :: [Text] -> [Text] -> [Text]
+zipText (a:as) (b:bs) = append a b : zipText as bs
+zipText _ _           = []
+
 fetchPostgresConnection :: IO ConnectionString
-fetchPostgresConnection = return localConnString
+fetchPostgresConnection = do
+  host <- getSecret "host"
+  port <- getSecret "port"
+  user <- getSecret "user"
+  dbname <- getSecret "dbname"
+  password <- getSecret "password"
+  let env = map pack ["host=", " port=", " user=", " dbname=", " password="]
+  let val = [host, port, user, dbname, password]
+  let connString = encodeUtf8 $ foldl append "" (zipText env val)
+  return connString
 
-runAction :: ConnectionString -> SqlPersistT (LoggingT IO) a -> IO a
-runAction connectionString action = 
-  runStdoutLoggingT $ withPostgresqlConn connectionString $ \backend ->
-    runReaderT action backend
+runAction :: ConnectionString -> ReaderT SqlBackend (NoLoggingT (ResourceT IO)) a-> IO a
+runAction connectionString action =
+  runStdoutLoggingT $ withPostgresqlPool connectionString 8 $ \pool ->
+    liftIO $ runSqlPersistMPool action pool
 
-migrateDB :: ConnectionString -> IO ()
-migrateDB connString = runAction connString (runMigration migrateAll)
+fetchPlayerPG :: ConnectionString -> Text -> Text -> IO [Entity Player]
+fetchPlayerPG connString name school = runAction connString (selectList [PlayerName ==. name, PlayerSchool ==. school] [])
 
-fetchPlayerPG :: ConnectionString -> Text -> IO [Entity Player]
-fetchPlayerPG connString name = runAction connString (selectList [PlayerName ==. name] [])
-
-fetchPlayerYrPG :: ConnectionString -> Text -> Text -> IO (Maybe (Entity Player))
-fetchPlayerYrPG connString name yr = runAction connString (selectFirst [PlayerName ==. name, PlayerClass ==. yr] [])
+-- fetchPlayerYrPG :: ConnectionString -> Text -> Text -> IO (Maybe (Entity Player))
+-- fetchPlayerYrPG connString name yr = runAction connString (selectFirst [PlayerName ==. name, PlayerClass ==. yr] [])

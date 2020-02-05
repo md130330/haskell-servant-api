@@ -34,10 +34,16 @@ packages:
 # These entries can reference officially published versions as well as
 # forks / in-progress versions pinned to a git hash. For example:
 #
-# extra-deps:
-# - acme-missiles-0.3
-# - git: https://github.com/commercialhaskell/stack.git
-#   commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a
+extra-deps:
+- aws-easy-0.1.0.2@sha256:ef331eb24243567bff2a08401d327680d8d19cafe5c35c6cc588eceef9da46a1,2893
+- amazonka-1.6.1@sha256:d863557379350ed6bbb91187abeb8c349a654f60b140d138710486f58ae7c476,3536
+- amazonka-ssm-1.6.1@sha256:9b1c4673dd4a8f713291fb325c2179daab7cc94a962c8e1fab6968bd572c8148,7854
+- amazonka-core-1.6.1@sha256:9bc59ce403c6eeba3b3eaf3f10e5f0b6a33b6edbbf8f6de0dd6f4c67b86fa698,5135
+- amazonka-dynamodb-1.6.1@sha256:6b8852049c65207a7b3741aafa3e4e6c77cfa115e05de3c74868218ae642b6b0,4459
+- amazonka-s3-1.6.1@sha256:9d07240fca59ad5197fb614ce3051e701e4951e6d4625a2dab4a9c17a1900194,6317
+# - amazonka-1.5.0
+# - amazonka-core-1.5.0
+# - amazonka-ssm-1.5.0
 #
 # extra-deps: []
 

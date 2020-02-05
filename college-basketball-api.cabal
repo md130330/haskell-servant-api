@@ -20,14 +20,23 @@ executable college-basketball-api
   default-language:    Haskell2010
   build-depends:       base >= 4.7 && < 5
                        , aeson
+                       , amazonka
+                       , amazonka-ssm
+                       , aws-easy
+                       , bytestring
+                       , directory
+                       , filepath
+                       , lens
                        , monad-logger
                        , mtl
                        , persistent
                        , persistent-postgresql
                        , persistent-template
+                       , resourcet
                        , text
                        , servant
                        , servant-client
                        , servant-server 
                        , transformers
                        , warp
+other-modules:         SSMImports

@@ -1,6 +1,11 @@
 module Main where
 
-import Database (localConnString, migrateDB)
+import           API                      (playersAPI, playersServer)
+import           Database                 (fetchPostgresConnection)
+import           Network.Wai.Handler.Warp (run)
+import           Servant.Server
 
 main :: IO ()
-main = migrateDB localConnString
+main = do
+  connString <- fetchPostgresConnection
+  run 8000 (serve playersAPI (playersServer connString))
