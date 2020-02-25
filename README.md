@@ -12,7 +12,7 @@ In order to make sure everything goes smoothly, after installing postgres
   1. Add the folder that has `ps_config.exe` to your path
   2. If needed, add the lib folder of the postgres application to your path as well 
 
-From there, please run the sql command in the table.txt file to create the table and import the csv into the table created.
+From there, please run the sql command in the gonzaga table.txt file to create the table and import the csv into the table created.
 
 Once that is complete, open up the repl and run the following commands
 
