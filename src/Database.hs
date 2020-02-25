@@ -40,6 +40,3 @@ runAction connectionString action =
 
 fetchPlayerPG :: ConnectionString -> Text -> Text -> IO [Entity Player]
 fetchPlayerPG connString name school = runAction connString (selectList [PlayerName ==. name, PlayerSchool ==. school] [])
-
--- fetchPlayerYrPG :: ConnectionString -> Text -> Text -> IO (Maybe (Entity Player))
--- fetchPlayerYrPG connString name yr = runAction connString (selectFirst [PlayerName ==. name, PlayerClass ==. yr] [])
