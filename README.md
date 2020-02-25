@@ -2,6 +2,8 @@
 
 A toy project for me to use Haskell to implement a real world program, namely a REST API that pulls from a db that displays a college basketball teams roster.
 
+This is mostly meant as an exercise to pull from a db. The idea is that input into the db will be done through other means.
+
 ## Requirements
 
 You should have both postgres and the AWS SDK installed.
