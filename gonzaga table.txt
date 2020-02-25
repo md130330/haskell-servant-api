@@ -1,0 +1,12 @@
+create table Gonzaga (
+  name varchar(100),
+  number int,
+  class varchar(100),
+  position varchar(100),
+  height varchar(100),
+  weight int,
+  hometown varchar(100),
+  highschool varchar(100),
+  rsci varchar(100),
+  summary varchar(100)
+)
