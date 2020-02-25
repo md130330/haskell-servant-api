@@ -16,11 +16,11 @@ From there, please run the sql command in the table.txt file to create the table
 
 Once that is complete, open up the repl and run the following commands
 
-  setSecret "host" {db host url}
-  setSecret "port" {db port number}
-  setSecret "user" {db username}
-  setSecret "dbname" {db name}
-  setSecret "password" {db password}
+* setSecret "host" {db host url}
+* setSecret "port" {db port number}
+* setSecret "user" {db username}
+* setSecret "dbname" {db name}
+* setSecret "password" {db password}
  
 This will store your db information in AWS's SSM.
  
